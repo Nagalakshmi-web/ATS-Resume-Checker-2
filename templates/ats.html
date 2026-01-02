@@ -1,0 +1,155 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ATS Resume Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input[type="file"],
+        textarea,
+        button {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        textarea {
+            height: 150px;
+            padding: 10px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .output {
+            margin-top: 30px;
+        }
+
+        .box {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📄 ATS Resume Checker</h1>
+
+<div class="container">
+
+    <label>Upload Resume (PDF)</label>
+    <input type="file" id="resume" accept=".pdf">
+
+    <label>Paste Job Description</label>
+    <textarea id="job_description" placeholder="Paste the job description here..."></textarea>
+
+    <button onclick="analyzeResume()">Analyze Resume</button>
+
+    <div id="loading" class="loading"></div>
+
+    <div class="output">
+        <h3>📌 Parsed Resume</h3>
+        <div id="parsed_resume" class="box"></div>
+
+        <h3>📌 Parsed Job Description</h3>
+        <div id="parsed_jd" class="box"></div>
+
+        <h3>📌 ATS Result</h3>
+        <div id="ats_result" class="box"></div>
+    </div>
+
+</div>
+
+<script>
+    async function analyzeResume() {
+        const resumeFile = document.getElementById("resume").files[0];
+        const jobDescription = document.getElementById("job_description").value;
+
+        if (!resumeFile || !jobDescription) {
+            alert("Please upload resume and enter job description");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("resume", resumeFile);
+        formData.append("job_description", jobDescription);
+
+        document.getElementById("loading").innerText = "⏳ Analyzing resume...";
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/analyze", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            document.getElementById("parsed_resume").innerText =
+                data.parsed_resume || "No data";
+
+            document.getElementById("parsed_jd").innerText =
+                data.parsed_job_description || "No data";
+
+            document.getElementById("ats_result").innerText =
+                data.ats_result || "No data";
+
+        } catch (error) {
+            alert("Error connecting to backend");
+            console.error(error);
+        }
+
+        document.getElementById("loading").innerText = "";
+    }
+</script>
+
+</body>
+</html>
