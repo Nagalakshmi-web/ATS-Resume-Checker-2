@@ -13,7 +13,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # 🔐 API KEY (USE ENV VARIABLE)
 # Run in terminal once:
 # setx GEMINI_API_KEY "your_api_key_here"
-client = genai.Client(api_key=os.getenv("AIzaSyAUfsJKfPjNVHiAmznLOHelfEGswRs2EyU"))
+client = genai.Client(api_key=os.getenv("your API key"))
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
