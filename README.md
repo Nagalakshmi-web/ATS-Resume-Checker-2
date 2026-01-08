@@ -87,7 +87,7 @@ Create an environment variable:
 
 Windows
 
-setx GEMINI_API_KEY "AIzaSyAUfsJKfPjNVHiAmznLOHelfEGswRs2EyU"
+setx GEMINI_API_KEY "Your API key"
 
 
 Restart terminal after setting it.
